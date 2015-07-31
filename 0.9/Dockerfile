@@ -31,3 +31,8 @@ EXPOSE 8086
 VOLUME ["/data"]
 
 CMD ["/run.sh"]
+
+# extensions to support ninjasphere requirements
+
+ADD influxd /opt/influxdb/influxd
+
