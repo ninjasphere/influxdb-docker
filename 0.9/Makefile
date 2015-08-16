@@ -6,5 +6,5 @@ push: build
 
 binary:
 	go get -d github.com/influxdb/influxdb
-	cd $(GOPATH)/src/github.com/influxdb/influxdb && GOOS=linux GOARCH=amd64 go install
+	cd $(GOPATH)/src/github.com/influxdb/influxdb && GOOS=linux GOARCH=amd64 go install ./...
 	cp $(GOPATH)/bin/linux_amd64/influxd influxd
