@@ -1,8 +1,16 @@
+IMAGE=ninjasphere/influxdb
+SHA1 := $(shell git rev-parse --short HEAD)
+
 build: binary
-	docker build -t ninjasphere/influxdb:$$(git rev-parse --short HEAD) .
+	docker build -t $(IMAGE):$(SHA1) .
+	docker tag -f $(IMAGE):$(SHA1) $(IMAGE):latest
+	@echo built...$(IMAGE):$(SHA1)
 
 push: build
-	docker push ninjasphere/influxdb:$$(git rev-parse --short HEAD)
+	docker push $(IMAGE):$(SHA1)
+
+push-latest:
+	docker push $(IMAGE):latest
 
 binary:
 	go get -d github.com/influxdb/influxdb
