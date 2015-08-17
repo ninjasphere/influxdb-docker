@@ -34,7 +34,7 @@ CMD ["/run.sh"]
 
 # extensions to support ninjasphere requirements
 
-ADD config.toml.sh /config/config.toml.sh
+COPY config.toml.sh /config/config.toml.sh
 ADD run-wrapper.sh /run-wrapper.sh
 ADD influxd /opt/influxdb/influxd
 
