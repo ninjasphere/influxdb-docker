@@ -15,4 +15,8 @@ push-latest:
 
 binary:
 	go get -d github.com/influxdb/influxdb
-	cd $(GOPATH)/src/github.com/influxdb/influxdb && git checkout ${INFLUX_COMMIT} && GOOS=linux GOARCH=amd64 go build -o influxd
+	cd $(GOPATH)/src/github.com/influxdb/influxdb && \
+	git checkout ${INFLUX_COMMIT} && \
+	cd cmd/influxd && \
+	GOOS=linux GOARCH=amd64 go build -o influxd
+	cp $(GOPATH)/src/github.com/influxdb/influxdb/cmd/influxd/influxd influxd
