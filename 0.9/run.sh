@@ -14,9 +14,9 @@ if [ -n "${FORCE_HOSTNAME}" ]; then
     if [ "${FORCE_HOSTNAME}" == "auto" ]; then
         #set hostname with IPv4 eth0
         HOSTIPNAME=$(ip a show dev eth0 | grep inet | grep eth0 | sed -e 's/^.*inet.//g' -e 's/\/.*$//g')
-        /usr/bin/perl -p -i -e "s/^# hostname.*$/hostname = \"${HOSTIPNAME}\"/g" ${CONFIG_FILE}
+        /usr/bin/perl -p -i -e "s/hostname = \"localhost\"/hostname = \"${HOSTIPNAME}\"/g" ${CONFIG_FILE}
     else
-        /usr/bin/perl -p -i -e "s/^# hostname.*$/hostname = \"${FORCE_HOSTNAME}\"/g" ${CONFIG_FILE}
+        /usr/bin/perl -p -i -e "s/hostname = \"localhost\"/hostname = \"${FORCE_HOSTNAME}\"/g" ${CONFIG_FILE}
     fi
 fi
 
@@ -65,19 +65,37 @@ if [ -n "${GRAPHITE_TEMPLATE}" ]; then
     sed -i -r -e "/^\[\[graphite\]\]/, /^$/ { s/instance\.profile\.measurement\*/${GRAPHITE_TEMPLATE}/; }" ${CONFIG_FILE}
 fi
 
+# Add Collectd support
+if [ -n "${COLLECTD_DB}" ]; then
+    echo "COLLECTD_DB: ${COLLECTD_DB}"
+    sed -i -r -e "/^\[collectd\]/, /^$/ { s/false/true/; s/( *)# *(.*)\"collectd\"/\1\2\"${COLLECTD_DB}\"/g;}" ${CONFIG_FILE}
+fi
+if [ -n "${COLLECTD_BINDING}" ]; then
+    echo "COLLECTD_BINDING: ${COLLECTD_BINDING}"
+    sed -i -r -e "/^\[collectd\]/, /^$/ { s/( *)# *(.*)\":25826\"/\1\2\"${COLLECTD_BINDING}\"/g;}" ${CONFIG_FILE}
+fi
+if [ -n "${COLLECTD_RETENTION_POLICY}" ]; then
+    echo "COLLECTD_RETENTION_POLICY: ${COLLECTD_RETENTION_POLICY}"
+    sed -i -r -e "/^\[collectd\]/, /^$/ { s/( *)# *(retention-policy.*)\"\"/\1\2\"${COLLECTD_RETENTION_POLICY}\"/g;}" ${CONFIG_FILE}
+fi
+
 # Add UDP support
 if [ -n "${UDP_DB}" ]; then
-    sed -i -r -e "/^\[udp\]/, /^$/ { s/false/true/; s/#//g; s/\"udpdb\"/\"${UDP_DB}\"/g; }" ${CONFIG_FILE}
+    sed -i -r -e "/^\[\[udp\]\]/, /^$/ { s/false/true/; s/#//g; s/\"udpdb\"/\"${UDP_DB}\"/g; }" ${CONFIG_FILE}
 fi
 if [ -n "${UDP_PORT}" ]; then
-    sed -i -r -e "/^\[udp\]/, /^$/ { s/4444/${UDP_PORT}/; }" ${CONFIG_FILE}
+    sed -i -r -e "/^\[\[udp\]\]/, /^$/ { s/4444/${UDP_PORT}/; }" ${CONFIG_FILE}
 fi
 
 
 echo "influxdb configuration: "
 cat ${CONFIG_FILE}
 echo "=> Starting InfluxDB ..."
-exec /opt/influxdb/influxd -config=${CONFIG_FILE} &
+if [ -n "${JOIN}" ]; then
+  exec influxd -config=${CONFIG_FILE} -join ${JOIN} &
+else
+  exec influxd -config=${CONFIG_FILE} &
+fi
 
 # Pre create database on the initiation of the container
 if [ -n "${PRE_CREATE_DB}" ]; then
@@ -100,19 +118,19 @@ if [ -n "${PRE_CREATE_DB}" ]; then
         PASS=${INFLUXDB_INIT_PWD:-root}
         if [ -n "${ADMIN_USER}" ]; then
           echo "=> Creating admin user"
-          /opt/influxdb/influx -host=${INFLUX_HOST} -port=${INFLUX_API_PORT} -execute="CREATE USER ${ADMIN_USER} WITH PASSWORD '${PASS}' WITH ALL PRIVILEGES"
+          influx -host=${INFLUX_HOST} -port=${INFLUX_API_PORT} -execute="CREATE USER ${ADMIN_USER} WITH PASSWORD '${PASS}' WITH ALL PRIVILEGES"
           for x in $arr
           do
               echo "=> Creating database: ${x}"
-              /opt/influxdb/influx -host=${INFLUX_HOST} -port=${INFLUX_API_PORT} -username=${ADMIN_USER} -password="${PASS}" -execute="create database ${x}"
-              /opt/influxdb/influx -host=${INFLUX_HOST} -port=${INFLUX_API_PORT} -username=${ADMIN_USER} -password="${PASS}" -execute="grant all PRIVILEGES on ${x} to ${ADMIN_USER}"
+              influx -host=${INFLUX_HOST} -port=${INFLUX_API_PORT} -username=${ADMIN_USER} -password="${PASS}" -execute="create database ${x}"
+              influx -host=${INFLUX_HOST} -port=${INFLUX_API_PORT} -username=${ADMIN_USER} -password="${PASS}" -execute="grant all PRIVILEGES on ${x} to ${ADMIN_USER}"
           done
           echo ""
         else
           for x in $arr
           do
               echo "=> Creating database: ${x}"
-              /opt/influxdb/influx -host=${INFLUX_HOST} -port=${INFLUX_API_PORT} -execute="create database \"${x}\""
+              influx -host=${INFLUX_HOST} -port=${INFLUX_API_PORT} -execute="create database \"${x}\""
           done
         fi
 
