@@ -153,12 +153,12 @@ reporting-disabled = false
   # consistency-level = "one"
 
 ###
-### [udp]
+### [[udp]]
 ###
 ### Controls the listener for InfluxDB line protocol data via UDP.
 ###
 
-[udp]
+[[udp]]
   enabled = false
   bind-address = ":4444"
   database = "udpdb"
