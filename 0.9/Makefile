@@ -18,4 +18,7 @@ binary:
 	cd $(GOPATH)/src/github.com/influxdb/influxdb && \
 	git checkout ${INFLUX_COMMIT} && \
 	./build.sh
+	cp $(GOPATH)/src/github.com/influxdb/influxdb/build/influx_tsm influx_tsm
 	cp $(GOPATH)/src/github.com/influxdb/influxdb/build/influxd influxd
+	cp $(GOPATH)/src/github.com/influxdb/influxdb/build/influx influx
+	

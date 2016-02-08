@@ -38,5 +38,7 @@ CMD ["/run.sh"]
 COPY config.toml.sh /config/config.toml.sh
 ADD run-wrapper.sh /run-wrapper.sh
 ADD influxd /opt/influxdb/influxd
+ADD influx /opt/influxdb/
+ADD influx_tsm /opt/influxdb/
 
 CMD ["/run-wrapper.sh"]
