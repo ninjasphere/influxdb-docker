@@ -39,7 +39,7 @@ reporting-disabled = false
 
 [data]
   dir = "/data/db"
-  engine = "b1"
+  engine = "tsm"
 
   # The following WAL settings are for the b1 storage engine used in 0.9.2. They won't
   # apply to any new shards created after upgrading to a version > 0.9.3.
