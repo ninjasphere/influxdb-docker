@@ -22,8 +22,7 @@ binary:
 	cp $(GOPATH)/src/github.com/influxdb/influxdb/build/influxd influxd
 	cp $(GOPATH)/src/github.com/influxdb/influxdb/build/influx influx
 
-install: binary
+install: build
 	sudo cp influx /usr/local/bin
 	sudo cp influxd /usr/local/bin
 	sudo cp influx_tsm /usr/local/bin
-	sudo cp influx_inspect /usr/local/bin
