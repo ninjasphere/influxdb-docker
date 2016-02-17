@@ -1,5 +1,5 @@
 IMAGE=ninjasphere/influxdb
-INFLUX_COMMIT=782a283e22df745eedcd1c2bd253dcc73d2ae99b
+INFLUX_COMMIT=f62005160e538dc9fa3830078a002cd33191e76b
 SHA1 := $(shell git rev-parse --short HEAD)
 
 build: binary
