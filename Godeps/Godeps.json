@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/ninjasphere/influxdb-docker",
-	"GoVersion": "go1.5",
+	"GoVersion": "go1.6",
 	"Deps": [
 		{
 			"ImportPath": "github.com/influxdata/influxdb",
