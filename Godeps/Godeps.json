@@ -4,7 +4,7 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/influxdb/influxdb",
-			"Comment": "stable-20160302",
+			"Comment": "stable-20160319",
 			"Rev": "eaea3b77ee2cec8593860ddbdc8cde80659ce199"
 		}
 	]
