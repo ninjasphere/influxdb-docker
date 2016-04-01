@@ -1,6 +1,6 @@
 IMAGE=ninjasphere/influxdb
 SHA1 := $(shell git rev-parse --short HEAD)
-INFLUXDB_SHA1=stable
+INFLUXDB_SHA1=stable-20160401
 
 build:
 	cd $(GOPATH)/src/github.com/influxdb/influxdb && git checkout $(INFLUXDB_SHA1) && git pull --ff-only && godep restore && ./build-docker.sh
