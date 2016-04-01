@@ -7,7 +7,7 @@ build:
 	 git fetch origin --tags && \
 	 git checkout $(INFLUXDB_SHA1)^0 && \
 	 godep restore && \
-	 GOVER=1.4.3 ./build-docker.sh
+	 GO_VER=1.4.3 ./build-docker.sh
 	docker build -t $(IMAGE):$(SHA1) .
 	docker tag -f $(IMAGE):$(SHA1) $(IMAGE):latest
 	@echo built...$(IMAGE):$(SHA1)
