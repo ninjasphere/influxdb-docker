@@ -1,6 +1,6 @@
 IMAGE=ninjasphere/influxdb
 SHA1 := $(shell git rev-parse --short HEAD)
-INFLUXDB_SHA1=stable-20160401
+INFLUXDB_SHA1=stable-20160404
 
 build:
 	cd $(GOPATH)/src/github.com/influxdata/influxdb && \
@@ -9,12 +9,7 @@ build:
 	 godep restore && \
 	 GO_VER=1.6 ./build-docker.sh
 	docker build -t $(IMAGE):$(SHA1) .
-	docker tag -f $(IMAGE):$(SHA1) $(IMAGE):latest
 	@echo built...$(IMAGE):$(SHA1)
 
 push: build
 	docker push $(IMAGE):$(SHA1)
-
-push-latest:
-	docker push $(IMAGE):latest
-
