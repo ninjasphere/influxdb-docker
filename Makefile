@@ -1,6 +1,6 @@
 IMAGE=ninjasphere/influxdb
 SHA1 := $(shell git rev-parse --short HEAD)
-INFLUXDB_SHA1=origin/stable
+INFLUXDB_SHA1=stable-20160405
 
 build:
 	cd $(GOPATH)/src/github.com/influxdata/influxdb && \
