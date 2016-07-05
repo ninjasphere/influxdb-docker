@@ -9,6 +9,7 @@ build:
 	 godep restore && \
 	 GO_VER=1.6 ./build-docker.sh
 	docker build -t $(IMAGE):$(SHA1) .
+	docker tag influxdb:latest influxdb:$(INFLUXDB_SHA1)
 	@echo built...$(IMAGE):$(SHA1)
 
 push: build
